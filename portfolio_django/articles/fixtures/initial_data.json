@@ -1,0 +1,118 @@
+[
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$0cojtBnyauVc1PZiZi409g$wDPCMEe8HPNA+YdW0tXF3eCKJm2TJoTuZ8uFR86uGzw=",
+            "is_superuser": false,
+            "username": "user1",
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2026-04-01T12:00:00Z"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$0cojtBnyauVc1PZiZi409g$wDPCMEe8HPNA+YdW0tXF3eCKJm2TJoTuZ8uFR86uGzw=",
+            "is_superuser": false,
+            "username": "user2",
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2026-04-01T12:00:00Z"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 3,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$0cojtBnyauVc1PZiZi409g$wDPCMEe8HPNA+YdW0tXF3eCKJm2TJoTuZ8uFR86uGzw=",
+            "is_superuser": false,
+            "username": "user3",
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2026-04-01T12:00:00Z"
+        }
+    },
+    {
+        "model": "articles.article",
+        "pk": 1,
+        "fields": {
+            "title": "First Article",
+            "author": 1,
+            "created": "2026-04-01T12:05:00Z",
+            "synopsis": "This is the first article.",
+            "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        }
+    },
+    {
+        "model": "articles.article",
+        "pk": 2,
+        "fields": {
+            "title": "Second Article",
+            "author": 2,
+            "created": "2026-04-01T12:10:00Z",
+            "synopsis": "Synopsis for the second article.",
+            "content": "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        }
+    },
+    {
+        "model": "articles.article",
+        "pk": 3,
+        "fields": {
+            "title": "Third Article",
+            "author": 3,
+            "created": "2026-04-01T12:15:00Z",
+            "synopsis": "A quick look at the third piece.",
+            "content": "Ut enim ad minim veniam, quis nostrud exercitation."
+        }
+    },
+    {
+        "model": "articles.article",
+        "pk": 4,
+        "fields": {
+            "title": "Fourth Article",
+            "author": 1,
+            "created": "2026-04-01T12:20:00Z",
+            "synopsis": "More insights from user1.",
+            "content": "Duis aute irure dolor in reprehenderit in voluptate velit."
+        }
+    },
+    {
+        "model": "articles.article",
+        "pk": 5,
+        "fields": {
+            "title": "Fifth Article",
+            "author": 2,
+            "created": "2026-04-01T12:25:00Z",
+            "synopsis": "Concluding thoughts.",
+            "content": "Excepteur sint occaecat cupidatat non proident."
+        }
+    },
+    {
+        "model": "articles.userfavouritearticle",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "article": 1
+        }
+    },
+    {
+        "model": "articles.userfavouritearticle",
+        "pk": 2,
+        "fields": {
+            "user": 1,
+            "article": 2
+        }
+    }
+]

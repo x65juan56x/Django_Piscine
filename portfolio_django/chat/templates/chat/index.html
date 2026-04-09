@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Chat Rooms" %} | {% trans "Portfolio" %}{% endblock %}
+{% block page_title %}{% trans "Chat" %}{% endblock %}
+{% block page_subtitle %}{% trans "Module 08" %}{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <h3 class="mb-4">{% trans "Available Chat Rooms" %}</h3>
+            <div class="list-group shadow-sm">
+                {% for room in rooms %}
+                <a href="{% url 'chat:room' room.name %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    {{ room.name }}
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+                {% empty %}
+                <div class="list-group-item list-group-item-secondary">{% trans "No rooms available." %}</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Article Detail | Portfolio{% endblock %}
+
+{% block page_title %}Articles{% endblock %}
+{% block page_subtitle %}Module 07{% endblock %}
+
+{% block content %}
+<h1>{{ article.title }}</h1>
+<p><strong>{% trans "Author:" %}</strong> {{ article.author.username }}</p>
+<p><strong>{% trans "Published on:" %}</strong> {{ article.created }}</p>
+<p><strong>{% trans "Synopsis:" %}</strong> {{ article.synopsis }}</p>
+<hr>
+<div>
+  {{ article.content|linebreaks }}
+</div>
+{% if user.is_authenticated %}
+<hr>
+<h3>{% trans "Add this article to your favourites" %}</h3>
+<form method="post" action="{% url 'add_favourite' %}">
+  {% csrf_token %}
+  <input type="hidden" name="article" value="{{ article.id }}">
+  <button type="submit" class="btn btn-primary">{% trans "Add to Favourites" %}</button>
+</form>
+{% endif %}
+{% endblock %}

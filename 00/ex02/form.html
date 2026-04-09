@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Contact Form</title>
+    <script type="text/javascript" src="popup.js"></script>
+</head>
+<body>
+    <h1>Contact Form</h1>
+    <form>
+        <div>
+            <label for="firstname">Firstname:</label>
+            <input type="text" id="firstname" name="firstname" />
+        </div>
+
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" />
+        </div>
+
+        <div>
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" />
+        </div>
+
+        <div>
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone" />
+        </div>
+
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" />
+        </div>
+
+        <div>
+            <label>
+                Student at 42? <input type="checkbox" id="student" name="student" />
+            </label>
+        </div>
+
+        <div>
+            <label>
+                Male<input type="radio" id="gender_male" name="gender" value="Male" />
+            </label>
+            <label>
+                Female<input type="radio" id="gender_female" name="gender" value="Female" />
+            </label>
+            <label>
+                Other<input type="radio" id="gender_other" name="gender" value="Other" />
+            </label>
+        </div>
+
+        <div>
+            <input type="button" value="Run that sexy Javascript !" onclick="displayFormContents()" />
+        </div>
+    </form>
+</body>

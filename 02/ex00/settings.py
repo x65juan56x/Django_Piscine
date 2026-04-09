@@ -1,0 +1,8 @@
+page_title = "myCV"
+name = "Dwight"
+surname = "Schrute"
+age = "40"
+profession = "Assistant Regional Manager"
+location = "Scranton"
+email = "dwight.schute@dundermifflin.com"
+summary = "Ventas y Negociación de Alto Rendimiento"

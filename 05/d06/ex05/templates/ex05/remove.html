@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="eng">
+<head>
+    <meta charset="UTF-8">
+    <title>Remove Movies</title>
+</head>
+<body>
+    <h1>Delete a Star Wars Movie (ORM)</h1>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+
+        <label for="movie_dropdown">Select a movie to remove:</label>
+
+        <select name="movie_dropdown" id="movie_dropdown">
+
+            {% for movie in movies %}
+                <option value="{{ movie.episode_nb }}">{{ movie.title }}</option>
+            {% endfor %}
+
+        </select>
+
+        <button type="submit" name="remove">Remove</button>
+    </form>
+</body>
+</html>

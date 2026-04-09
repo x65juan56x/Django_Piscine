@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Account | Portfolio{% endblock %}
+{% block page_title %}Account{% endblock %}
+{% block page_subtitle %}Module 08 - Authentication{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 text-center">
+        <!-- Not Connected View -->
+        <div id="unauth-view" class="card shadow-sm" style="{% if user.is_authenticated %}display: none;{% endif %}">
+            <div class="card-header bg-dark text-white">
+                <h4 class="mb-0">{% trans "Connection Form" %}</h4>
+            </div>
+            <div class="card-body">
+                <!-- AJAX Error messages container -->
+                <div id="login-errors" class="alert alert-danger" style="display: none;"></div>
+                
+                <form id="login-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary w-100">Log In</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Connected View -->
+        <div id="auth-view" class="card shadow-sm" style="{% if not user.is_authenticated %}display: none;{% endif %}">
+            <div class="card-body py-5">
+                <h3 class="mb-4">Logged as <span id="username-display" class="fw-bold text-primary">{{ user.username }}</span></h3>
+                <form id="logout-form-standalone">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger px-5">Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Function to extract CSRF cookie dynamically
+        function getPageCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        $('#login-form').on('submit', function(e) {
+            e.preventDefault(); 
+            $('#login-errors').hide().empty();
+            
+            $.ajax({
+                type: 'POST',
+                url: '{% url "ajax_login" %}',
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        $('#username-display').text(response.username);
+                        
+                        let newCsrf = getPageCookie('csrftoken');
+                        if (newCsrf) {
+                            $('input[name="csrfmiddlewaretoken"]').val(newCsrf);
+                        }
+
+                        $('#unauth-view').hide();
+                        $('#auth-view').fadeIn();
+                        
+                        // Also update global navbar dynamically so it doesn't mismatch
+                        $('#nav-unauth-view').hide();
+                        $('#nav-username').text(response.username);
+                        $('#nav-auth-view').fadeIn();
+                        
+                        $('#login-form')[0].reset();
+                    } else {
+                        let errorsHtml = '<ul class="mb-0 text-start">';
+                        for (let field in response.errors) {
+                            errorsHtml += '<li>' + response.errors[field].join(' ') + '</li>';
+                        }
+                        errorsHtml += '</ul>';
+                        $('#login-errors').html(errorsHtml).fadeIn();
+                    }
+                },
+                error: function() {
+                    $('#login-errors').html('An unexpected error occurred.').fadeIn();
+                }
+            });
+        });
+
+        $('#logout-form-standalone').on('submit', function(e) {
+            e.preventDefault(); 
+            
+            $.ajax({
+                type: 'POST',
+                url: '{% url "ajax_logout" %}',
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        let resetCsrf = getPageCookie('csrftoken');
+                        if (resetCsrf) {
+                            $('input[name="csrfmiddlewaretoken"]').val(resetCsrf);
+                        }
+                        $('#auth-view').hide();
+                        $('#unauth-view').fadeIn();
+                        
+                        // Also update global navbar!
+                        $('#nav-auth-view').hide();
+                        $('#nav-unauth-view').fadeIn();
+                    }
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

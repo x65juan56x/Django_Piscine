@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>
+      Ex00: Markdown Cheatsheet.
+    </title>
+  </head>
+  <body>
+    <h1>Ex00: Markdown Cheatsheet.</h1>
+
+    {% for category, items in cheatsheet.items %}
+      <h2>{{ category }}</h2>
+      <ul>
+      {% for item in items %}
+        <li>{{ item|safe }}</li>
+      {% endfor %}
+      </ul>
+    {% endfor %}
+
+  </body>
+</html>

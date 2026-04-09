@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Chat Room - {{ room.name }}</title>
+    <!-- Use jQuery as the sole frontend library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .chat-container {
+            display: flex;
+            gap: 20px;
+            width: 90%;
+            margin-bottom: 10px;
+        }
+        #chat-log {
+            border: 1px solid #ccc;
+            height: 400px;
+            overflow-y: scroll;
+            padding: 10px;
+            flex-grow: 1;
+            display: block; 
+        }
+        #user-list-container {
+            border: 1px solid #ccc;
+            height: 400px;
+            overflow-y: auto;
+            width: 200px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        .message { margin-bottom: 5px; }
+        .system-message { font-style: italic; color: #888; }
+    </style>
+</head>
+<body>
+    <h1>Chat Room: {{ room.name }}</h1>
+
+    <div class="chat-container">
+        <div id="chat-log"></div>
+        <div id="user-list-container">
+            <h4>Connected Users</h4>
+            <ul id="user-list"></ul>
+        </div>
+    </div>
+
+    <br>
+    <input id="chat-message-input" type="text" size="90">
+    <input id="chat-message-submit" type="button" value="Send">
+
+    {% comment %} Con esto Django escapea todo el texto para evitar ataques XSS {% endcomment %}
+    {{ room.name|json_script:"room-name" }}
+    {{ request.user.username|json_script:"username" }}
+
+    <script>
+        $(document).ready(function() {
+            const roomName = JSON.parse(document.getElementById('room-name').textContent);
+            const username = JSON.parse(document.getElementById('username').textContent);
+            
+            const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+            const chatSocket = new WebSocket(
+                wsScheme + '://' + window.location.host + '/ws/chat/' + roomName + '/'
+            );
+
+            chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                
+                // Identificar el tipo de mensaje (Chat Message o User List Update)
+                if (data.msg_type === "user_list") {
+                    $('#user-list').empty(); // Limpiar lista vieja
+                    
+                    data.users.forEach(function(user) {
+                        $('#user-list').append('<li>' + user + '</li>');
+                    });
+                } else if (data.msg_type === "chat_message") {
+                    if (data.sender === "System") {
+                        $('#chat-log').append('<div class="message system-message">' + data.message + '</div>');
+                    } else {
+                        $('#chat-log').append('<div class="message"><strong>' + data.sender + ':</strong> ' + data.message + '</div>');
+                    }
+                    // scorll al fondo
+                    $('#chat-log').scrollTop($('#chat-log')[0].scrollHeight);
+                }
+            };
+            
+            chatSocket.onclose = function(e) {
+                console.error('Chat socket closed unexpectedly');
+            };
+            
+            $('#chat-message-input').focus();
+            
+            $('#chat-message-input').on('keyup', function(e) {
+                if (e.keyCode === 13) {  // enter, return
+                    $('#chat-message-submit').click();
+                }
+            });
+            
+            $('#chat-message-submit').on('click', function(e) {
+                const messageInputDom = $('#chat-message-input');
+                const message = messageInputDom.val();
+                
+                if (message.trim() !== '') {
+                    chatSocket.send(JSON.stringify({
+                        'message': message
+                    }));
+                    messageInputDom.val('');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

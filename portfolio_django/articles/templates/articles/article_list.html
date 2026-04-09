@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Articles | Portfolio{% endblock %}
+
+{% block page_title %}Articles{% endblock %}
+{% block page_subtitle %}Module 07{% endblock %}
+
+{% block content %}
+<table class="table table-hover align-middle">
+  <thead class="table-light">
+    <tr>
+      <th scope="col">{% trans "Title" %}</th>
+      <th scope="col">{% trans "Synopsis" %}</th>
+      <th scope="col" class="text-end">{% trans "Writer" %}</th>
+      <th scope="col" class="text-end">{% trans "Created" %}</th>
+      <th scope="col" class="text-end">{% trans "When" %}</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for article in articles|dictsortreversed:"created" %}
+    <tr>
+      <td>{{ article.title }}</td>
+      <td>{{ article.synopsis|truncatechars:20 }}</td>
+      <td class="text-end">{{ article.author.username }}</td>
+      <td class="text-end">{{ article.created|date:"M. d, Y, P" }}</td>
+      <td class="text-end">{{ article.created|timesince }} {% trans "ago" %}</td>
+      <td class="text-end">
+        <a href="{% url 'detail' article.id %}" class="btn btn-info btn-sm text-white">{% trans "Read" %}</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

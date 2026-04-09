@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Star Wars Advanced Search</title>
+</head>
+<body>
+    <h1>Star Wars Advanced Search</h1>
+    
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Search</button>
+    </form>
+
+    <hr>
+
+    {% if request.method == 'POST' %}
+        <h2>Results:</h2>
+        
+        {% if results %}
+            <ul>
+                {% for row in results %}
+                    <li>
+                        {{ row.title }} - 
+                        {{ row.characters__name }} - 
+                        {{ row.characters__gender }} - 
+                        {{ row.characters__homeworld__name }} - 
+                        {{ row.characters__homeworld__diameter }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Nothing corresponding to your research</p>
+        {% endif %}
+    {% endif %}
+
+</body>
+</html>

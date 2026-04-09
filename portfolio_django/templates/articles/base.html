@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Articles | Portfolio{% endblock %}
+{% block page_title %}{% trans "Articles" %}{% endblock %}
+{% block page_subtitle %}{% trans "Module 07 - Share your writings" %}{% endblock %}
+
+{% block app_nav_links %}
+  <li class="nav-item ms-lg-4 border-start ps-3 align-self-center d-none d-lg-block" style="height: 24px;"></li>
+  <li class="nav-item">
+    <a class="nav-link px-3 py-3 {% if request.resolver_match.url_name == 'articles' %}active bg-black{% endif %}" href="{% url 'articles' %}">{% trans "Last Articles" %}</a>
+  </li>
+  {% if request.user.is_authenticated %}
+  <li class="nav-item">
+    <a class="nav-link px-3 py-3 {% if request.resolver_match.url_name == 'favourites' %}active bg-black{% endif %}" href="{% url 'favourites' %}">{% trans "Favourites" %}</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link px-3 py-3 {% if request.resolver_match.url_name == 'publications' %}active bg-black{% endif %}" href="{% url 'publications' %}">{% trans "Publications" %}</a>
+  </li>
+  {% endif %}
+{% endblock %}

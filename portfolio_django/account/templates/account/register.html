@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6">
+    <div class="card shadow-sm mx-auto" style="max-width: 400px;">
+      <div class="card-header bg-dark text-white">
+        <h1 class="h5 mb-0 text-center">{% trans "Register" %}</h1>
+      </div>
+      <div class="card-body">
+        <form method="post" class="needs-validation">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="btn btn-primary w-100 mt-3">{% trans "Register" %}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'ex01/base.html' %}
+{% load static %}
+
+{% block title %}Ex01: Template engine.{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'ex01/style2.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h1>Ex01: Template engine.</h1>
+    <p>Django templates use special syntax:</p>
+    <ul>
+        <li><strong>Blocks:</strong> Allow inheritance.</li>
+        <li><strong>Loops:</strong> Iterate over lists using <code>{% verbatim %}{% for item in list %}{% endverbatim %}</code>.</li>
+        <li><strong>If structures:</strong> Logic control using <code>{% verbatim %}{% if condition %}{% endverbatim %}</code>.</li>
+        <li><strong>Context variables:</strong> Display data from views using <code>{% verbatim %}{{ variable }}{% endverbatim %}</code>.</li>
+    </ul>
+{% endblock %}

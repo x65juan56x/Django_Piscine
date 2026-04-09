@@ -1,0 +1,81 @@
+{% extends 'ex/base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            {% if request.user.is_authenticated %}
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Got a new Life Pro Tip?</h5>
+                        <form method="POST" action="{% url 'home' %}">
+                            {% csrf_token %}
+                            {% bootstrap_form form %}
+                            <button type="submit" class="btn btn-primary mt-2">Post Tip</button>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-info text-center" role="alert">
+                    Log in or register to share your own Life Pro Tips!
+                </div>
+            {% endif %}
+
+            <div class="mt-4">
+                <h3 class="mb-4">Recent Tips</h3>
+                {% for tip in tips %}
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body">
+                            <p class="card-text fs-5">"{{ tip.content }}"</p>
+                        </div>
+                        <div class="card-footer text-muted d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <div>
+                                <small>By <strong>{{ tip.author.username }} ({{ tip.author.reputation }})</strong></small>
+                                <br>
+                                <small>{{ tip.date|date:"F j, Y, P" }}</small>
+                            </div>
+                            
+                            {% if request.user.is_authenticated %}
+                            <div class="d-flex align-items-center gap-2">
+                                <form method="POST" action="{% url 'upvote_tip' tip.id %}" class="m-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm {% if request.user in tip.upvotes.all %}btn-success{% else %}btn-outline-success{% endif %}">
+                                        &uarr; Upvote ({{ tip.upvotes.count }})
+                                    </button>
+                                </form>
+
+                                {% if request.user == tip.author or perms.ex.can_downvote %}
+                                <form method="POST" action="{% url 'downvote_tip' tip.id %}" class="m-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm {% if request.user in tip.downvotes.all %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                                        &darr; Downvote ({{ tip.downvotes.count }})
+                                    </button>
+                                </form>
+                                {% else %}
+                                <button type="button" class="btn btn-sm btn-outline-danger m-0" disabled>
+                                    &darr; Downvote ({{ tip.downvotes.count }})
+                                </button>
+                                {% endif %}
+
+                                {% if request.user == tip.author or perms.ex.delete_tip %}
+                                <form method="POST" action="{% url 'delete_tip' tip.id %}" class="m-0" onsubmit="return confirm('Are you sure you want to delete this tip?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary">Delete</button>
+                                </form>
+                                {% endif %}
+                            </div>
+                            {% else %}
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-success">&uarr; {{ tip.upvotes.count }}</span>
+                                <span class="badge bg-danger">&darr; {{ tip.downvotes.count }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="alert alert-secondary">No tips published yet. Be the first!</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

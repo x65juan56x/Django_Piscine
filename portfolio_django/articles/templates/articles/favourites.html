@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Favourites | Portfolio{% endblock %}
+
+{% block page_title %}Articles{% endblock %}
+{% block page_subtitle %}Module 07{% endblock %}
+
+{% block content %}
+<h1>{% trans "My Favourites" %}</h1>
+<ul>
+  {% for fav in favourites %}
+  <li>
+    <a href="{% url 'detail' fav.article.id %}">{{ fav.article.title }}</a>
+  </li>
+  {% empty %}
+  <li>{% trans "You have no favourite articles." %}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

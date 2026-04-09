@@ -1,0 +1,8 @@
+{% extends 'ex01/base.html' %}
+
+{% block title %}Ex01: Display process of a static page.{% endblock %}
+
+{% block content %}
+    <h1>Ex01: Display process of a static page.</h1>
+    <p>When a user requests a URL, Django's URL dispatcher routes it to the corresponding view. The view processes the request and calls the render function, combining a template with a context dictionary to generate an HTTP response containing the final HTML.</p>
+{% endblock %}

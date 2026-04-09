@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Chat Room" %} - {{ room.name }} | {% trans "Portfolio" %}{% endblock %}
+{% block page_title %}{% trans "Chat" %}{% endblock %}
+{% block page_subtitle %}{% trans "Room:" %} {{ room.name }}{% endblock %}
+
+{% block content %}
+    <style>
+        .chat-container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        #chat-log {
+            height: 50vh;
+            overflow-y: scroll;
+            flex-grow: 1;
+            display: block; 
+        }
+        #user-list-container {
+            height: 50vh;
+            overflow-y: auto;
+            width: 250px;
+        }
+        .message { margin-bottom: 5px; }
+        .system-message { font-style: italic; color: #888; }
+    </style>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="chat-container">
+                <div id="chat-log" class="form-control bg-light"></div>
+                <div id="user-list-container" class="card shadow-sm">
+                    <div class="card-header bg-dark text-white py-2">
+                        <h6 class="mb-0 m-0"><i class="bi bi-people-fill"></i> {% trans "Connected" %}</h6>
+                    </div>
+                    <ul id="user-list" class="list-group list-group-flush h-100 overflow-auto"></ul>
+                </div>
+            </div>
+
+            <div class="input-group mb-3 shadow-sm">
+                <input id="chat-message-input" type="text" class="form-control form-control-lg" placeholder="{% trans 'Type a message...' %}" aria-label="{% trans 'Recipient\'s username' %}" aria-describedby="chat-message-submit">
+                <button class="btn btn-primary px-4" type="button" id="chat-message-submit"><i class="bi bi-send"></i> {% trans "Send" %}</button>
+            </div>
+
+            {{ room.name|json_script:"room-name" }}
+            {{ request.user.username|json_script:"username" }}
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            const roomName = JSON.parse(document.getElementById('room-name').textContent);
+            const username = JSON.parse(document.getElementById('username').textContent);
+            
+            const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+            const chatSocket = new WebSocket(
+                wsScheme + '://' + window.location.host + '/ws/chat/' + roomName + '/'
+            );
+
+            chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                
+                if (data.msg_type === "user_list") {
+                    $('#user-list').empty(); 
+                    
+                    data.users.forEach(function(user) {
+                        $('#user-list').append('<li class="list-group-item py-1"><i class="bi bi-person-circle text-success me-2"></i>' + user + '</li>');
+                    });
+                } else if (data.msg_type === "chat_message") {
+                    if (data.sender === "System") {
+                        $('#chat-log').append('<div class="message system-message text-muted small mb-2 text-center">' + data.message + '</div>');
+                    } else {
+                        let alignment = data.sender === username ? "text-end" : "text-start";
+                        let bgClass = data.sender === username ? "bg-primary text-white" : "bg-white text-dark border";
+                        
+                        $('#chat-log').append(
+                            '<div class="message mb-3 ' + alignment + '">' +
+                                '<div class="d-inline-block px-3 py-2 rounded-3 shadow-sm ' + bgClass + '" style="max-width: 75%;">' +
+                                    (data.sender !== username ? '<strong>' + data.sender + ':</strong><br>' : '') + 
+                                    data.message + 
+                                '</div>' +
+                            '</div>'
+                        );
+                    }
+                    $('#chat-log').scrollTop($('#chat-log')[0].scrollHeight);
+                }
+            };
+            
+            chatSocket.onclose = function(e) {
+                console.error('Chat socket closed unexpectedly');
+            };
+            
+            $('#chat-message-input').focus();
+            
+            $('#chat-message-input').on('keyup', function(e) {
+                if (e.keyCode === 13) {  
+                    $('#chat-message-submit').click();
+                }
+            });
+            
+            $('#chat-message-submit').on('click', function(e) {
+                const messageInputDom = $('#chat-message-input');
+                const message = messageInputDom.val();
+                
+                if (message.trim() !== '') {
+                    chatSocket.send(JSON.stringify({
+                        'message': message
+                    }));
+                    messageInputDom.val('');
+                }
+            });
+        });
+    </script>
+{% endblock %}

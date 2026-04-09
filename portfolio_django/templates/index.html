@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Portfolio{% endblock %}
+
+{% block page_title %}Portfolio{% endblock %}
+{% block page_subtitle %}{% trans "Django - Juan Mondón" %}{% endblock %}
+
+{% block content %}
+<div class="row mt-5">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h2 class="card-title text-primary"><i class="bi bi-lightbulb"></i> {% trans "Tips" %}</h2>
+                <h6 class="card-subtitle mb-3 text-muted">{% trans "Module 06" %}</h6>
+                <p class="card-text text-start">{% trans "Session based authentication, CSRF, Middlewares, Forms. Post life pro tips and vote them up or down." %}</p>
+                <a href="{% url 'home' %}" class="btn btn-outline-primary mt-auto d-block">{% trans "Open Tips" %}</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h2 class="card-title text-success"><i class="bi bi-journal-text"></i> {% trans "Articles" %}</h2>
+                <h6 class="card-subtitle mb-3 text-muted">{% trans "Module 07" %}</h6>
+                <p class="card-text text-start">{% trans "Class-Based Views, complex routing, advanced ORM usage. Publish articles, read other authors' publications, and manage your favorites list." %}</p>
+                <a href="{% url 'articles' %}" class="btn btn-outline-success mt-auto d-block">{% trans "Open Articles" %}</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h2 class="card-title text-warning"><i class="bi bi-chat-dots"></i> {% trans "Chat" %}</h2>
+                <h6 class="card-subtitle mb-3 text-muted">{% trans "Module 08" %}</h6>
+                <p class="card-text text-start">{% trans "Asynchronous Django, WebSockets with Channels. Real-time chat application with room separation." %}</p>
+                <a href="{% url 'chat:index' %}" class="btn btn-outline-warning mt-auto d-block">{% trans "Open Chat" %}</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
